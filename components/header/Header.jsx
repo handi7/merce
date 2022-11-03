@@ -1,5 +1,5 @@
 import { Avatar, Badge, Dropdown, Layout, Menu, message, Space } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -10,7 +10,10 @@ import {
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import Router from "next/router";
-import { logout } from "../store/functions/authFunction";
+import { logout } from "../../store/functions/authFunction";
+import UserMenu from "./UserDropdown";
+import CartDropdown from "./CartDropdown";
+import { getCartItems } from "../../store/actions/CartAction";
 
 const { Header } = Layout;
 
@@ -56,7 +59,10 @@ const menu = (dispatch) => {
 
 export default function Head({ collapsed, setCollapsed }) {
   const user = useSelector((state) => state.user);
+  const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
+
+  const [isOpen, setOpen] = useState({ cart: false });
 
   return (
     <Header
@@ -64,25 +70,53 @@ export default function Head({ collapsed, setCollapsed }) {
       style={{
         padding: 0,
         backgroundColor: "#307DF0",
+        position: "fixed",
+        width: "100%",
+        // marginRight: "200px",
+        left: 0,
       }}
       // backgroundColor="blue"
     >
-      {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-        className: "cursor-pointer text-white",
-        onClick: () => setCollapsed(!collapsed),
-      })}
+      <div className="d-flex align-items-center">
+        {React.createElement(
+          collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+          {
+            className: "cursor-pointer text-white p-2",
+            onClick: () => setCollapsed(!collapsed),
+          }
+        )}
+
+        <h4 className="text-white mt-1 mx-3">LOGO</h4>
+      </div>
       <Space size="large">
-        <Badge size="small" count={3}>
-          {/* <Avatar icon={<ShoppingCartOutlined />} /> */}
-          <ShoppingCartOutlined style={{ fontSize: "20px", color: "white" }} />
-        </Badge>
-        <Badge size="small" count={3}>
-          <MessageOutlined style={{ fontSize: "20px", color: "white" }} />
-        </Badge>
+        <Dropdown
+          placement="bottom"
+          overlay={() => CartDropdown(cart)}
+          trigger={["click"]}
+        >
+          <Badge size="small" count={cart.length}>
+            <ShoppingCartOutlined
+              style={{ fontSize: "20px", color: "white", cursor: "pointer" }}
+            />
+          </Badge>
+        </Dropdown>
+
+        <Dropdown
+          placement="bottomRight"
+          overlay={() => menu(dispatch)}
+          trigger={["click"]}
+        >
+          <Badge size="small" count={3}>
+            <MessageOutlined
+              style={{ fontSize: "20px", color: "white", cursor: "pointer" }}
+            />
+          </Badge>
+        </Dropdown>
+
         <Dropdown
           className="me-3"
           placement="bottomRight"
-          overlay={() => menu(dispatch)}
+          overlay={() => UserMenu(dispatch)}
           trigger={["click"]}
         >
           <div

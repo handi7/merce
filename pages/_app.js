@@ -8,10 +8,17 @@ import { LOCAL_TOKEN } from "../lib/constants";
 import { keepLogin, logout } from "../store/functions/authFunction";
 import { Spin } from "antd";
 import Page from "../components/core/Page";
+import { getCartItems } from "../store/actions/CartAction";
 
 function MyApp({ Component, pageProps }) {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (user.id) {
+      getCartItems(user.id, dispatch);
+    }
+  }, [user]);
 
   useEffect(() => {
     const token = localStorage.getItem(LOCAL_TOKEN);
