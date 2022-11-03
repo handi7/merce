@@ -83,7 +83,7 @@ const SelectMarket = ({ Item }) => {
         )}
       >
         {markets.map((item) => (
-          <Option key={item.id} value={item.market}>
+          <Option key={item.id} value={item.id}>
             {item.market}
           </Option>
         ))}

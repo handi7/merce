@@ -16,7 +16,7 @@ export default async function addProduct(req, res) {
         req.body.description = "";
       }
 
-      let query = `insert into products (category_id, name, price, regular_price, 
+      let query = `insert into products (category_id, name, price, general_price, 
                     stock, unit, per_pkg, stock_pkg, description, image) 
                     values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
 
