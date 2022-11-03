@@ -1,9 +1,9 @@
 import { Image, Table } from "antd";
 import React from "react";
-import getProductImg from "../../../helper/client/getProductImage";
-import toCurrency from "../../../helper/client/toCurrency";
+import getProductImg from "../../helper/client/getProductImage";
+import toCurrency from "../../helper/client/toCurrency";
 
-export default function List({ products }) {
+export default function ProductList({ products }) {
   const columns = [
     {
       title: "Name",

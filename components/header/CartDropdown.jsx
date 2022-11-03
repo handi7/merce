@@ -22,7 +22,7 @@ export default function CartDropdown(cart) {
       <Divider />
 
       <div>
-        {cart.slice(3).map((product) => {
+        {cart.slice(0, 3).map((product) => {
           return (
             <div key={product.id}>
               <div className="d-flex">
