@@ -1,54 +1,10 @@
-import { Avatar, Button, Layout, Menu } from "antd";
-import Router, { withRouter } from "next/router";
-import {
-  AppstoreOutlined,
-  ContainerOutlined,
-  DesktopOutlined,
-  MailOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  PieChartOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
+import { Layout } from "antd";
+import { withRouter } from "next/router";
 import React, { useState } from "react";
-import styles from "./Page.module.css";
-import { menuData } from "../../lib/menuData";
-import Head from "../Header.jsx";
 import Side from "../Sider.jsx";
+import Head from "../header/Header";
 
-const { Footer, Sider, Content } = Layout;
-
-function getItem(label, key, icon, children, type) {
-  return {
-    key,
-    icon,
-    children,
-    label,
-    type,
-  };
-}
-
-const items = [
-  getItem("Option 1", "1", <PieChartOutlined />),
-  getItem("Option 2", "2", <DesktopOutlined />),
-  getItem("Option 3", "3", <ContainerOutlined />),
-  getItem("Navigation One", "sub1", <MailOutlined />, [
-    getItem("Option 5", "5"),
-    getItem("Option 6", "6"),
-    getItem("Option 7", "7"),
-    getItem("Option 8", "8"),
-  ]),
-  getItem("Navigation Two", "sub2", <AppstoreOutlined />, [
-    getItem("Option 9", "9"),
-    getItem("Option 10", "10"),
-    getItem("Submenu", "sub3", null, [
-      getItem("Option 11", "11"),
-      getItem("Option 12", "12"),
-    ]),
-  ]),
-];
+const { Footer, Content } = Layout;
 
 const NonDashboardRoutes = [
   "/login",
@@ -60,24 +16,29 @@ const NonDashboardRoutes = [
 
 const Page = ({ router, children }) => {
   const isDashboard = !NonDashboardRoutes.includes(router.pathname);
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
 
   return isDashboard ? (
-    <Layout>
-      <Side collapsed={collapsed} />
-      <Layout className="bg-light">
-        <Head collapsed={collapsed} setCollapsed={setCollapsed} />
+    <Layout hasSider style={{ minHeight: "100vh" }}>
+      <Layout
+        style={{
+          marginLeft: collapsed ? 80 : 200,
+        }}
+        className="bg-light"
+      >
         <Content
           className="bg-light"
           style={{
-            margin: "24px 16px",
+            margin: "60px 16px",
             padding: 24,
             minHeight: 280,
           }}
         >
           {children}
         </Content>
-        <Footer>Footer</Footer>
+        <Side collapsed={collapsed} />
+        <Head collapsed={collapsed} setCollapsed={setCollapsed} />
+        {/* <Footer>Footer</Footer> */}
       </Layout>
     </Layout>
   ) : (

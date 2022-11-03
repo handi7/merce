@@ -23,8 +23,9 @@ export default function admins() {
     {
       title: "Invoice",
       dataIndex: "invoice_id",
+      key: "invoice_id",
       render: (_, item) => {
-        return <span>{item.invoice_id}</span>;
+        return <span key={item.id}>{item.invoice_id}</span>;
       },
       sorter: {
         compare: (a, b) => {
@@ -37,8 +38,9 @@ export default function admins() {
     {
       title: "Category",
       dataIndex: "category",
+      key: "category",
       render: (_, item) => {
-        return <span>{item.category}</span>;
+        return <span key={item.id}>{item.category}</span>;
       },
       sorter: {
         compare: (a, b) => {
@@ -52,9 +54,9 @@ export default function admins() {
     {
       title: "Amount",
       dataIndex: "grand_total",
-      //   key: "age",
+      key: "grand_total",
       //   width: "20%",
-      render: (_, item) => <span>{item.email}</span>,
+      render: (_, item) => <span key={item.id}>{item.email}</span>,
       //   ...getColumnSearchProps("age"),
       sorter: (a, b) => a.grand_total - b.grand_total,
       sortDirections: ["descend", "ascend"],
@@ -63,7 +65,7 @@ export default function admins() {
       title: "Stock",
       dataIndex: "stock",
       key: "stock",
-      render: (_, item) => <span>{item.stock}</span>,
+      render: (_, item) => <span key={item.id}>{item.stock}</span>,
       //   ...getColumnSearchProps("address"),
       sorter: (a, b) => a.stock - b.stock,
       sortDirections: ["descend", "ascend"],

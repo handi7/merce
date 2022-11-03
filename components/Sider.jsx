@@ -11,14 +11,20 @@ export default function Side({ collapsed }) {
   };
 
   return (
-    <Sider trigger={null} collapsible collapsed={collapsed}>
-      <div className="logo text-center my-3">
-        {collapsed ? (
-          <h4 className="text-white">L</h4>
-        ) : (
-          <h4 className="text-white">LOGO</h4>
-        )}
-      </div>
+    <Sider
+      style={{
+        overflow: "auto",
+        height: "100vh",
+        position: "fixed",
+        paddingTop: 10,
+        left: 0,
+        top: 60,
+        bottom: 0,
+      }}
+      trigger={null}
+      collapsible
+      collapsed={collapsed}
+    >
       <Menu
         theme="dark"
         mode="inline"
