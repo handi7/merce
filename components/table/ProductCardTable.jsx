@@ -1,11 +1,11 @@
 import { Button, Card, Image, List } from "antd";
 import React from "react";
-import getProductImg from "../../../helper/client/getProductImage";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "../../../store/actions/CartAction";
+import getProductImg from "../../helper/client/getProductImage";
+import { addToCart } from "../../store/actions/CartAction";
 
-export default function CardList({ products }) {
+export default function ProductCardTable({ products }) {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
 

@@ -7,8 +7,8 @@ import getProductImg from "../helper/client/getProductImage.js";
 import toCurrency from "../helper/client/toCurrency.js";
 import { API_URL } from "../lib/constants";
 import productImg from "../public/product.jpg";
-import List from "../components/product/table/List.jsx";
-import CardList from "../components/product/table/CardList.jsx";
+import ProductCardTable from "../components/table/ProductCardTable.jsx";
+import ProductList from "../components/table/ProductList.jsx";
 
 const { Search } = Input;
 
@@ -80,9 +80,9 @@ export default function Products() {
               key: i,
               children:
                 i === 0 ? (
-                  <CardList products={products} />
+                  <ProductCardTable products={products} />
                 ) : (
-                  <List products={products} />
+                  <ProductList products={products} />
                 ),
             };
           })}
