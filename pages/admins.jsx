@@ -1,10 +1,16 @@
-import { Card, Table } from "antd";
+import { Avatar, Card, Col, Image, Row, Table, Tag, Typography } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import AdminDetails from "../components/drawer/AdminDetails";
+import getProfileImg from "../helper/client/getProfileImage";
 import { API_URL } from "../lib/constants";
+
+const { Text } = Typography;
 
 export default function admins() {
   const [admins, setAdmins] = useState([]);
+  const [selected, setSelected] = useState({});
+  const [isOpen, setOpen] = useState(false);
 
   const getAdmins = async () => {
     try {
@@ -15,69 +21,113 @@ export default function admins() {
     }
   };
 
+  const onOpen = (admin) => {
+    setSelected(admin);
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+    setSelected({});
+  };
+
   useEffect(() => {
     getAdmins();
   }, []);
 
   const columns = [
     {
-      title: "Invoice",
-      dataIndex: "invoice_id",
-      key: "invoice_id",
-      render: (_, item) => {
-        return <span key={item.id}>{item.invoice_id}</span>;
+      title: "Name",
+      dataIndex: "first_name",
+      key: "first_name",
+      render: (_, admin) => {
+        return (
+          <Row>
+            <Col span={4}>
+              <Avatar>
+                <Image src={getProfileImg(admin.image)} />
+              </Avatar>
+            </Col>
+            <Col span={20} className="d-flex flex-column">
+              <Text strong>{`${admin.first_name} ${admin.last_name}`}</Text>
+              <Text style={{ fontSize: "12px" }}>{admin.username}</Text>
+            </Col>
+          </Row>
+        );
       },
       sorter: {
         compare: (a, b) => {
-          a = a.invoice_id.toLowerCase();
-          b = b.invoice_id.toLowerCase();
+          a = a.first_name.toLowerCase();
+          b = b.first_name.toLowerCase();
           return a > b ? -1 : b > a ? 1 : 0;
         },
       },
     },
     {
-      title: "Category",
-      dataIndex: "category",
-      key: "category",
-      render: (_, item) => {
-        return <span key={item.id}>{item.category}</span>;
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+      render: (_, admin) => {
+        return <span>{admin.email}</span>;
       },
       sorter: {
         compare: (a, b) => {
-          a = a.category.toLowerCase();
-          b = b.category.toLowerCase();
+          a = a.email.toLowerCase();
+          b = b.email.toLowerCase();
           return a > b ? -1 : b > a ? 1 : 0;
         },
       },
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Amount",
-      dataIndex: "grand_total",
-      key: "grand_total",
-      //   width: "20%",
-      render: (_, item) => <span key={item.id}>{item.email}</span>,
-      //   ...getColumnSearchProps("age"),
-      sorter: (a, b) => a.grand_total - b.grand_total,
+      title: "Status",
+      dataIndex: "is_active",
+      key: "is_active",
+      render: (_, admin) => {
+        return admin.is_verified ? (
+          <Tag color={admin.is_active ? "green" : "red"}>
+            {admin.is_active ? "Active" : "Deactived"}
+          </Tag>
+        ) : (
+          <span>-</span>
+        );
+      },
+      sorter: (a, b) => a.is_active - b.is_active,
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Stock",
-      dataIndex: "stock",
-      key: "stock",
-      render: (_, item) => <span key={item.id}>{item.stock}</span>,
-      //   ...getColumnSearchProps("address"),
-      sorter: (a, b) => a.stock - b.stock,
+      title: "Verified",
+      dataIndex: "is_verified",
+      key: "is_verified",
+      render: (_, admin) => (
+        <Tag color={admin.is_verified ? "green" : "red"}>
+          {admin.is_verified ? "Verified" : "Unverified"}
+        </Tag>
+      ),
+      sorter: (a, b) => a.is_verified - b.is_verified,
       sortDirections: ["descend", "ascend"],
     },
   ];
 
   return (
-    <Card>
-      <div>
-        <h4>Admins</h4>
-      </div>
-      <Table columns={columns} dataSource={admins} />
-    </Card>
+    <>
+      <Card>
+        <div>
+          <h4>Admins</h4>
+        </div>
+        <Table
+          rowKey={(item) => item.id}
+          columns={columns}
+          dataSource={admins}
+          rowClassName={() => "cursor-pointer"}
+          onRow={(admin) => {
+            return {
+              onClick: () => onOpen(admin),
+            };
+          }}
+        />
+      </Card>
+      <AdminDetails admin={selected} isOpen={isOpen} onClose={onClose} />
+    </>
   );
 }
