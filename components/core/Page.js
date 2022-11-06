@@ -9,6 +9,7 @@ const { Footer, Content } = Layout;
 const NonDashboardRoutes = [
   "/login",
   "/signup",
+  "/verify/[token]",
   "/forgot",
   "/lockscreen",
   "/_error",
