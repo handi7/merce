@@ -5,6 +5,7 @@ import {
   Divider,
   Drawer,
   Image,
+  message,
   Row,
   Space,
   Tag,
@@ -16,15 +17,38 @@ import {
 } from "@ant-design/icons";
 import moment from "moment";
 import getProfileImg from "../../helper/client/getProfileImage";
+import axios from "axios";
+import { API_URL } from "../../lib/constants";
+import { useState } from "react";
 
 const { Text } = Typography;
 
 const AdminDetails = ({ admin, isOpen, onClose }) => {
+  const [isLoading, setLoading] = useState(false);
+
+  const resendMail = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.patch(
+        `${API_URL}/admins/resendVerification`,
+        admin
+      );
+
+      setLoading(false);
+      if (!response.data) {
+        return message.error("Server error!");
+      }
+      message.success("Email sent!");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Drawer
       title="Admin Information"
       placement="right"
-      onClose={onClose}
+      onClose={() => onClose("details")}
       open={isOpen}
       footer={
         <div className="d-flex justify-content-end">
@@ -43,7 +67,9 @@ const AdminDetails = ({ admin, isOpen, onClose }) => {
               )}
             </Button>
           ) : (
-            <Button type="link">Resend Email</Button>
+            <Button type="link" loading={isLoading} onClick={resendMail}>
+              Resend Email
+            </Button>
           )}
         </div>
       }

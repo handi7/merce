@@ -1,6 +1,17 @@
-import { Avatar, Card, Col, Image, Row, Table, Tag, Typography } from "antd";
+import {
+  Avatar,
+  Button,
+  Card,
+  Col,
+  Image,
+  Row,
+  Table,
+  Tag,
+  Typography,
+} from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import AddAdmin from "../components/drawer/addAdmin";
 import AdminDetails from "../components/drawer/AdminDetails";
 import getProfileImg from "../helper/client/getProfileImage";
 import { API_URL } from "../lib/constants";
@@ -10,7 +21,7 @@ const { Text } = Typography;
 export default function admins() {
   const [admins, setAdmins] = useState([]);
   const [selected, setSelected] = useState({});
-  const [isOpen, setOpen] = useState(false);
+  const [isOpen, setOpen] = useState({ details: false, add: false });
 
   const getAdmins = async () => {
     try {
@@ -21,13 +32,15 @@ export default function admins() {
     }
   };
 
-  const onOpen = (admin) => {
-    setSelected(admin);
-    setOpen(true);
+  const onOpen = (type, admin) => {
+    if (type === "details") {
+      setSelected(admin);
+    }
+    setOpen({ ...isOpen, [type]: true });
   };
 
-  const onClose = () => {
-    setOpen(false);
+  const onClose = (type) => {
+    setOpen({ ...isOpen, [type]: false });
     setSelected({});
   };
 
@@ -112,8 +125,11 @@ export default function admins() {
   return (
     <>
       <Card>
-        <div>
+        <div className="d-flex justify-content-between mb-3">
           <h4>Admins</h4>
+          <Button type="primary" onClick={() => onOpen("add", "")}>
+            Add New Admin
+          </Button>
         </div>
         <Table
           rowKey={(item) => item.id}
@@ -122,12 +138,19 @@ export default function admins() {
           rowClassName={() => "cursor-pointer"}
           onRow={(admin) => {
             return {
-              onClick: () => onOpen(admin),
+              onClick: () => onOpen("details", admin),
             };
           }}
         />
       </Card>
-      <AdminDetails admin={selected} isOpen={isOpen} onClose={onClose} />
+
+      <AdminDetails
+        admin={selected}
+        isOpen={isOpen.details}
+        onClose={onClose}
+      />
+
+      <AddAdmin isOpen={isOpen.add} onClose={onClose} />
     </>
   );
 }
