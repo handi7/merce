@@ -25,7 +25,7 @@ export default function admins() {
 
   const getAdmins = async () => {
     try {
-      const response = await axios.get(`${API_URL}/getAdmins`);
+      const response = await axios.get(`${API_URL}/admins/getAdmins`);
       setAdmins(response.data);
     } catch (error) {
       console.log(error);

@@ -1,9 +1,10 @@
-import database from "../../lib/db";
+import database from "../../../lib/db";
 
 export default async function getAdmins(req, res) {
   try {
     let query = `select id, username, email, first_name, last_name, image, 
-            is_verified, is_active, created_at from admins;`;
+            is_verified, is_active, created_at from admins where role = 'Admin' 
+            order by first_name;`;
 
     const [result] = await database.execute(query);
     res.status(200).send(result);

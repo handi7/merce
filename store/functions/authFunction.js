@@ -42,3 +42,12 @@ export const logout = (dispatch) => {
   localStorage.removeItem(LOCAL_TOKEN);
   dispatch({ type: "LOGOUT" });
 };
+
+export const getProfile = async (dispatch, userId) => {
+  try {
+    const response = await axios.get(`${API_URL}/admins/getProfile/${userId}`);
+    dispatch({ type: "FILL_PROFILE", payload: response.data });
+  } catch (error) {
+    console.log(error);
+  }
+};
