@@ -1,4 +1,13 @@
-import { Avatar, Badge, Dropdown, Layout, Menu, message, Space } from "antd";
+import {
+  Avatar,
+  Badge,
+  Dropdown,
+  Image,
+  Layout,
+  Menu,
+  message,
+  Space,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import {
   MenuFoldOutlined,
@@ -15,6 +24,7 @@ import UserMenu from "./UserDropdown";
 import CartDropdown from "./CartDropdown";
 import { getCartItems } from "../../store/actions/CartAction";
 import Profile from "../drawer/ProfileDrawer";
+import getProfileImg from "../../helper/client/getProfileImage";
 
 const { Header } = Layout;
 
@@ -134,7 +144,9 @@ export default function Head({ collapsed, setCollapsed }) {
             className="d-flex align-items-center"
             onClick={() => setOpen(!isOpen)}
           >
-            <Avatar icon={<UserOutlined />} />
+            <Avatar
+              icon={<Image preview={false} src={getProfileImg(user.image)} />}
+            />
             <span className="ms-2 text-white">{`${user.first_name}`}</span>
           </div>
         </Space>

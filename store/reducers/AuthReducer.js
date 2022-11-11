@@ -43,8 +43,8 @@ const authReducer = (state = init_state, action) => {
     case "ERROR":
       return { ...state, errMsg: action.payload, loading: false };
 
-    //   case "CHECK_STORAGE":
-    //     return { ...state, storageIsChecked: true };
+    case "FILL_PROFILE":
+      return { ...state, ...action.payload };
 
     //   case "LOADING":
     //     return { ...state, loading: action.payload };
