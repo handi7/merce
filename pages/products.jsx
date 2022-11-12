@@ -9,10 +9,14 @@ import { API_URL } from "../lib/constants";
 import productImg from "../public/product.jpg";
 import ProductCardTable from "../components/table/ProductCardTable.jsx";
 import ProductList from "../components/table/ProductList.jsx";
+import { useSelector } from "react-redux";
+import Router from "next/router.js";
 
 const { Search } = Input;
 
 export default function Products() {
+  const user = useSelector((state) => state.user);
+
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [units, setUnits] = useState([]);
@@ -46,6 +50,12 @@ export default function Products() {
       getProducts("");
     }
   }, [searchText]);
+
+  useEffect(() => {
+    if (!user.id) {
+      Router.push("/login");
+    }
+  }, [user]);
 
   return (
     <>

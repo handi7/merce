@@ -145,7 +145,13 @@ export default function Head({ collapsed, setCollapsed }) {
             onClick={() => setOpen(!isOpen)}
           >
             <Avatar
-              icon={<Image preview={false} src={getProfileImg(user.image)} />}
+              icon={
+                user.image ? (
+                  <Image preview={false} src={getProfileImg(user.image)} />
+                ) : (
+                  <UserOutlined />
+                )
+              }
             />
             <span className="ms-2 text-white">{`${user.first_name}`}</span>
           </div>

@@ -11,6 +11,7 @@ import React, { useEffect, useState } from "react";
 import toCurrency from "../helper/client/toCurrency";
 import { API_URL, PUBLIC_URL } from "../lib/constants";
 import EllipsisDropdown from "../components/EllipsisDropdown";
+import { useSelector } from "react-redux";
 
 const { Text } = Typography;
 const { Search } = Input;
@@ -35,6 +36,8 @@ const getTag = (status) => {
 };
 
 export default function Orders() {
+  const user = useSelector((state) => state.user);
+
   const [totalOrders, setTotalOrders] = useState(0);
   const [orders, setOrders] = useState([]);
   const [searchText, setSearchText] = useState("");
@@ -71,6 +74,12 @@ export default function Orders() {
   useEffect(() => {
     getOrders("");
   }, []);
+
+  useEffect(() => {
+    if (!user.id) {
+      Router.push("/login");
+    }
+  }, [user]);
 
   const getMenuItem = (item) => {
     let stt = "";

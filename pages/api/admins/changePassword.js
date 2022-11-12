@@ -1,8 +1,9 @@
-import { decrypt } from "../../../helper/server/password";
+import { decrypt, encrypt } from "../../../helper/server/password";
 import db from "../../../lib/db";
 
 export default async function changePassword(req, res) {
   try {
+    const password = encrypt(req.body.newPassword);
     let checkQuery = `Select password from admins where id = ?;`;
     let updateQuery = `update admins set password = ? where id = ?;`;
 
@@ -16,7 +17,7 @@ export default async function changePassword(req, res) {
         .send({ message: "Current password did not match!" });
     }
 
-    await db.execute(updateQuery, [req.body.newPassword, req.body.id]);
+    await db.execute(updateQuery, [password, req.body.id]);
     res.status(200).send(true);
   } catch (error) {
     console.log(error);

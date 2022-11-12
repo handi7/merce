@@ -1,4 +1,5 @@
 import { Avatar, Button, Divider, Form, Image, Input, message } from "antd";
+import { UserOutlined } from "@ant-design/icons";
 import axios from "axios";
 import React from "react";
 import { useState } from "react";
@@ -92,12 +93,19 @@ export default function AccountTabs({ id, open, setOpened }) {
                 style={{ cursor: "pointer" }}
                 size={120}
                 icon={
-                  <Image
-                    preview={false}
-                    src={
-                      image.preview ? image.preview : getProfileImg(user.image)
-                    }
-                  />
+                  image.preview || user.image ? (
+                    <Image
+                      preview={false}
+                      style={{ objectFit: "cover" }}
+                      src={
+                        image.preview
+                          ? image.preview
+                          : getProfileImg(user.image)
+                      }
+                    />
+                  ) : (
+                    <UserOutlined />
+                  )
                 }
               />
             </label>
@@ -182,7 +190,7 @@ export default function AccountTabs({ id, open, setOpened }) {
       </Form.Item>
 
       <Form.Item>
-        <Button type="primary" block htmlType="submit">
+        <Button type="primary" block htmlType="submit" loading={isLoading}>
           Save Password
         </Button>
       </Form.Item>

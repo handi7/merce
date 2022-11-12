@@ -9,8 +9,11 @@ import {
   Tag,
   Typography,
 } from "antd";
+import { UserOutlined } from "@ant-design/icons";
 import axios from "axios";
+import Router from "next/router";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import AddAdmin from "../components/drawer/addAdmin";
 import AdminDetails from "../components/drawer/AdminDetails";
 import getProfileImg from "../helper/client/getProfileImage";
@@ -19,6 +22,8 @@ import { API_URL } from "../lib/constants";
 const { Text } = Typography;
 
 export default function admins() {
+  const user = useSelector((state) => state.user);
+
   const [admins, setAdmins] = useState([]);
   const [selected, setSelected] = useState({});
   const [isOpen, setOpen] = useState({ details: false, add: false });
@@ -48,6 +53,12 @@ export default function admins() {
     getAdmins();
   }, []);
 
+  useEffect(() => {
+    if (!user.id) {
+      Router.push("/login");
+    }
+  }, [user]);
+
   const columns = [
     {
       title: "Name",
@@ -57,9 +68,15 @@ export default function admins() {
         return (
           <Row>
             <Col span={4}>
-              <Avatar>
-                <Image src={getProfileImg(admin.image)} />
-              </Avatar>
+              <Avatar
+                icon={
+                  admin.image ? (
+                    <Image src={getProfileImg(admin.image)} />
+                  ) : (
+                    <UserOutlined />
+                  )
+                }
+              ></Avatar>
             </Col>
             <Col span={20} className="d-flex flex-column">
               <Text strong>{`${admin.first_name} ${admin.last_name}`}</Text>

@@ -1,9 +1,12 @@
 import axios from "axios";
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { API_URL } from "../../lib/constants";
 
 export default function Invoice() {
+  const user = useSelector((state) => state.user);
+
   const { invoice_id } = useRouter().query;
   const [invoice, setInvoice] = useState({});
   const [items, setItems] = useState();
@@ -25,6 +28,12 @@ export default function Invoice() {
       getInvoice(invoice_id);
     }
   }, [invoice_id]);
+
+  useEffect(() => {
+    if (!user.id) {
+      Router.push("/login");
+    }
+  }, [user]);
 
   return (
     <div>

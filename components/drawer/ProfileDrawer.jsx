@@ -11,7 +11,11 @@ import {
   Typography,
 } from "antd";
 import moment from "moment";
-import { SettingOutlined, LogoutOutlined } from "@ant-design/icons";
+import {
+  SettingOutlined,
+  LogoutOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import getProfileImg from "../../helper/client/getProfileImage";
 import { logout } from "../../store/functions/authFunction";
@@ -71,21 +75,17 @@ const Profile = ({ isOpen, setOpen }) => {
             <div>
               <Avatar
                 size={120}
-                icon={<Image src={getProfileImg(user.image)} />}
+                icon={
+                  user.image ? (
+                    <Image preview={false} src={getProfileImg(user.image)} />
+                  ) : (
+                    <UserOutlined />
+                  )
+                }
               />
             </div>
             <div>
               <Text strong>{`${user.first_name} ${user.last_name}`}</Text>
-            </div>
-            <div>
-              {user.is_verified ? (
-                <Tag color={user.is_active ? "green" : "red"}>
-                  {user.is_active ? "Active" : "Deactived"}
-                </Tag>
-              ) : null}
-              <Tag color={user.is_verified ? "green" : "red"}>
-                {user.is_verified ? "Verified" : "Unverified"}
-              </Tag>
             </div>
           </Space>
         </div>

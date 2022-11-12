@@ -49,8 +49,10 @@ export default async function updateProfile(req, res) {
 
       if (result.changedRows) {
         const oldImg = `public/profiles/${req.body.oldImg}`;
-        if (fs.existsSync(oldImg)) {
-          fs.unlinkSync(oldImg);
+        if (req.body.oldImg !== "profile.png") {
+          if (fs.existsSync(oldImg)) {
+            fs.unlinkSync(oldImg);
+          }
         }
       }
       res.status(200).send(true);

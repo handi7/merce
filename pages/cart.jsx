@@ -7,6 +7,7 @@ import CartTable from "../components/table/CartTable";
 import axios from "axios";
 import { API_URL } from "../lib/constants";
 import { getCartItems } from "../store/actions/CartAction";
+import Router from "next/router";
 
 const { Text } = Typography;
 
@@ -62,6 +63,12 @@ export default function Cart() {
     console.log("Clicked cancel button");
     setOpen(false);
   };
+
+  useEffect(() => {
+    if (!user.id) {
+      Router.push("/login");
+    }
+  }, [user]);
 
   return (
     <>
