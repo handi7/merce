@@ -144,9 +144,11 @@ export default function admins() {
       <Card>
         <div className="d-flex justify-content-between mb-3">
           <h4>Admins</h4>
-          <Button type="primary" onClick={() => onOpen("add", "")}>
-            Add New Admin
-          </Button>
+          {user.role === "Admin" ? null : (
+            <Button type="primary" onClick={() => onOpen("add", "")}>
+              Add New Admin
+            </Button>
+          )}
         </div>
         <Table
           rowKey={(item) => item.id}

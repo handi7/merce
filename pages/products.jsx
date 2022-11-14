@@ -2,7 +2,6 @@ import { Button, Card, Col, Row, Space, Table, Input, Tabs } from "antd";
 import { BorderOutlined, UnorderedListOutlined } from "@ant-design/icons";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import AddProduct from "../components/product/AddProduct.jsx";
 import getProductImg from "../helper/client/getProductImage.js";
 import toCurrency from "../helper/client/toCurrency.js";
 import { API_URL } from "../lib/constants";
@@ -11,6 +10,7 @@ import ProductCardTable from "../components/table/ProductCardTable.jsx";
 import ProductList from "../components/table/ProductList.jsx";
 import { useSelector } from "react-redux";
 import Router from "next/router.js";
+import AddProduct from "../components/drawer/AddProduct.jsx";
 
 const { Search } = Input;
 
@@ -71,9 +71,11 @@ export default function Products() {
               onChange={searchHandler}
               enterButton
             />
-            <Button type="primary" onClick={() => setDrawerOpen(true)}>
-              Add Product
-            </Button>
+            {user.role === "Admin" ? null : (
+              <Button type="primary" onClick={() => setDrawerOpen(true)}>
+                Add Product
+              </Button>
+            )}
           </Space>
         </div>
         <Tabs
@@ -92,7 +94,7 @@ export default function Products() {
                 i === 0 ? (
                   <ProductCardTable products={products} />
                 ) : (
-                  <ProductList products={products} />
+                  <ProductList products={products} getProducts={getProducts} />
                 ),
             };
           })}

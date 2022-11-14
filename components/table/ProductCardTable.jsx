@@ -1,9 +1,12 @@
-import { Button, Card, Image, List } from "antd";
+import { Button, Card, Image, List, Tag, Typography } from "antd";
 import React from "react";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import getProductImg from "../../helper/client/getProductImage";
 import { addToCart } from "../../store/actions/CartAction";
+import toCurrency from "../../helper/client/toCurrency";
+
+const { Text } = Typography;
 
 export default function ProductCardTable({ products }) {
   const user = useSelector((state) => state.user);
@@ -23,20 +26,30 @@ export default function ProductCardTable({ products }) {
       dataSource={products}
       renderItem={(product) => (
         <List.Item>
-          <Card>
-            {/* <div className="w-100 h-50"> */}
-            <Image src={getProductImg(product.image)} height={200} />
-            {/* </div> */}
-            <div>
-              <span>{product.name}</span>
-              <Button
-                type="primary"
-                size="small"
-                className="rounded"
-                onClick={() => onBtnAdd(product.id)}
-              >
-                <ShoppingCartOutlined />
-              </Button>
+          <Card className="shadow border rounded">
+            <div style={{ height: "390px" }} className="d-flex flex-column ">
+              <Image
+                style={{ objectFit: "contain" }}
+                src={getProductImg(product.image)}
+                height={300}
+              />
+              <div className="d-flex flex-column justify-content-end h-100">
+                <span>{product.category}</span>
+                <Text strong>{product.name}</Text>
+                <div className="d-flex justify-content-between">
+                  <Text strong className="text-success">
+                    {toCurrency(product.price)}
+                  </Text>
+
+                  <Button
+                    type="primary"
+                    size="small"
+                    className="rounded"
+                    icon={<ShoppingCartOutlined />}
+                    onClick={() => onBtnAdd(product.id)}
+                  ></Button>
+                </div>
+              </div>
             </div>
           </Card>
         </List.Item>

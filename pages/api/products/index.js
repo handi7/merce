@@ -5,7 +5,7 @@ export default async function getProducts(req, res) {
     let productsQuery = `select p.id, category_id, name, price, general_price, 
                     description, image, unit, stock, per_pkg,stock_pkg, 
                     is_deleted, category from products p join categories c 
-                    on p.category_id = c.id order by name;`;
+                    on p.category_id = c.id where is_deleted = false order by name;`;
     let categoriesQuery = `select * from categories;`;
     let unitsQuery = `select * from units;`;
 
