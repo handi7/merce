@@ -1,7 +1,6 @@
 import { Button, Col, Divider, Form, Input, Row, Select } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { API_URL } from "../../lib/constants";
 
 const SelectMarket = ({ Item }) => {
   const [form] = Form.useForm();
@@ -11,7 +10,7 @@ const SelectMarket = ({ Item }) => {
 
   const getMarkets = async () => {
     try {
-      const response = await axios.get(`${API_URL}/market/getMarkets`);
+      const response = await axios.get(`/api/market/getMarkets`);
       setMarkets(response.data);
     } catch (error) {
       console.log(error);
@@ -21,10 +20,9 @@ const SelectMarket = ({ Item }) => {
   const onFinish = async (values) => {
     try {
       setLoading(true);
-      console.log("add market");
-      console.log(values);
+      await axios.post(`/api/market/addMarket`, values);
       form.resetFields();
-      // await axios.post(`${API_URL}/market/addMarket`);
+      getMarkets();
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -83,9 +81,9 @@ const SelectMarket = ({ Item }) => {
         )}
       >
         {markets.map((item) => (
-          <Option key={item.id} value={item.id}>
+          <Select.Option key={item.id} value={item.id}>
             {item.market}
-          </Option>
+          </Select.Option>
         ))}
       </Select>
     </Item>

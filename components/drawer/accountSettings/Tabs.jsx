@@ -4,9 +4,8 @@ import axios from "axios";
 import React from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import getProfileImg from "../../../helper/client/getProfileImage";
-import { API_URL } from "../../../lib/constants";
-import { getProfile } from "../../../store/functions/authFunction";
+import { getProfile } from "../../../store/actions/authAction";
+import { getProfileImg } from "../../../helper/client/images";
 
 export default function AccountTabs({ id, open, setOpened }) {
   const user = useSelector((state) => state.user);
@@ -45,12 +44,9 @@ export default function AccountTabs({ id, open, setOpened }) {
 
     let response = {};
     if (image.file) {
-      response = await axios.patch(
-        `${API_URL}/admins/updateProfileNImg`,
-        formData
-      );
+      response = await axios.patch(`/api/admins/updateProfileNImg`, formData);
     } else {
-      response = await axios.patch(`${API_URL}/admins/updateProfile`, values);
+      response = await axios.patch(`/api/admins/updateProfile`, values);
     }
 
     if (response.data.message) {
@@ -66,7 +62,7 @@ export default function AccountTabs({ id, open, setOpened }) {
   const onSubmitPassword = async (values) => {
     values.id = user.id;
     setLoading(true);
-    const res = await axios.patch(`${API_URL}/admins/changePassword`, values);
+    const res = await axios.patch(`/api/admins/changePassword`, values);
     if (res.data.message) {
       setLoading(false);
       return message.error(res.data.message);
@@ -102,6 +98,7 @@ export default function AccountTabs({ id, open, setOpened }) {
                           ? image.preview
                           : getProfileImg(user.image)
                       }
+                      alt="profile"
                     />
                   ) : (
                     <UserOutlined />

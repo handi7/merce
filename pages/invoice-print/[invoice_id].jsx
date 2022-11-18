@@ -28,6 +28,7 @@ export default function Invoice() {
   useEffect(() => {
     if (invoice_id) {
       getInvoice(invoice_id);
+      setTimeout(() => window.print(), 500);
     }
   }, [invoice_id]);
 
@@ -71,19 +72,7 @@ export default function Invoice() {
         <title>MERCE | Invoice</title>
       </Head>
 
-      <div className="d-flex justify-content-between">
-        <Title level={3}>Invoice #{invoice.invoice_id}</Title>
-
-        <Button
-          type="primary"
-          className="rounded"
-          icon={<PrinterOutlined />}
-          href={`/invoice-print/${invoice.invoice_id}`}
-          target="_blank"
-        />
-      </div>
-
-      <Card>
+      <Card className="mt-5 mx-1 rounded">
         <Row>
           <Col
             span={24}
@@ -91,6 +80,7 @@ export default function Invoice() {
           >
             <Space direction="vertical">
               <Title level={4}>MERCE</Title>
+
               <Space>
                 <Image
                   width={20}
@@ -98,6 +88,7 @@ export default function Invoice() {
                   preview={false}
                   alt="location"
                 />
+
                 <Text>Jl. KH Nur Ali no. 63</Text>
               </Space>
 
@@ -108,6 +99,7 @@ export default function Invoice() {
                   preview={false}
                   alt="phone"
                 />
+
                 <Text>021234567</Text>
               </Space>
             </Space>
@@ -137,7 +129,8 @@ export default function Invoice() {
 
           <Col span={24}>
             <Table
-              // className="mt-2"
+              className="mt-5"
+              rowKey={(item) => item.id}
               columns={columns}
               dataSource={items}
               pagination={false}

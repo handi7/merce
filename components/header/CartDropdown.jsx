@@ -1,8 +1,7 @@
-import { Button, Card, Divider, Image, Menu, Typography } from "antd";
+import { Button, Card, Divider, Image, Typography } from "antd";
 import Router from "next/router";
-import { useSelector } from "react-redux";
-import getProductImg from "../../helper/client/getProductImage";
-import toCurrency from "../../helper/client/toCurrency";
+import { getProductImg } from "../../helper/client/images";
+import { toCurrency } from "../../helper/client/number";
 
 const { Text } = Typography;
 
@@ -16,7 +15,7 @@ export default function CartDropdown(cart) {
     <Card style={{ width: "300px" }}>
       <div className="d-flex justify-content-between">
         <Text strong>Cart</Text>
-        <span>{`${cart.length} items`}</span>
+        <span>{`${cart.length} ${cart.length > 1 ? "items" : "item"}`}</span>
       </div>
 
       <Divider />
@@ -31,6 +30,7 @@ export default function CartDropdown(cart) {
                     src={getProductImg(product.image)}
                     height={50}
                     alt="product"
+                    preview={false}
                   />
                 </div>
                 <div className="w-100">
@@ -53,12 +53,16 @@ export default function CartDropdown(cart) {
           );
         })}
       </div>
-      <Divider />
-      <div className="text-center">
-        <Button onClick={onBtnClick} type="link">
-          view all
-        </Button>
-      </div>
+      {cart.length ? (
+        <>
+          <Divider />
+          <div className="text-center">
+            <Button onClick={onBtnClick} type="link">
+              view all
+            </Button>
+          </div>
+        </>
+      ) : null}
     </Card>
   );
 }

@@ -17,10 +17,10 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
-import getProfileImg from "../../helper/client/getProfileImage";
-import { logout } from "../../store/functions/authFunction";
+import { logout } from "../../store/actions/authAction";
 import { useState } from "react";
 import AccountSettings from "./accountSettings/AccountSettings";
+import { getProfileImg } from "../../helper/client/images";
 
 const { Text } = Typography;
 
@@ -77,7 +77,11 @@ const Profile = ({ isOpen, setOpen }) => {
                 size={120}
                 icon={
                   user.image ? (
-                    <Image preview={false} src={getProfileImg(user.image)} />
+                    <Image
+                      preview={false}
+                      src={getProfileImg(user.image)}
+                      alt="profile"
+                    />
                   ) : (
                     <UserOutlined />
                   )

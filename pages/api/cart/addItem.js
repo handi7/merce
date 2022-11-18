@@ -8,7 +8,6 @@ export default async function addItem(req, res) {
     let updateQuery = `update carts set qty = ? where id = ?;`;
 
     const [[item]] = await db.execute(checkQuery, [user_id, product_id]);
-    console.log(item);
 
     if (item) {
       await db.execute(updateQuery, [qty + item.qty, item.id]);

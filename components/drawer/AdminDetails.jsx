@@ -14,12 +14,12 @@ import {
 import {
   ExclamationCircleOutlined,
   CheckCircleOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import moment from "moment";
-import getProfileImg from "../../helper/client/getProfileImage";
 import axios from "axios";
-import { API_URL } from "../../lib/constants";
 import { useState } from "react";
+import { getProfileImg } from "../../helper/client/images";
 
 const { Text } = Typography;
 
@@ -30,7 +30,7 @@ const AdminDetails = ({ admin, isOpen, onClose }) => {
     try {
       setLoading(true);
       const response = await axios.patch(
-        `${API_URL}/admins/resendVerification`,
+        `/api/admins/resendVerification`,
         admin
       );
 
@@ -52,25 +52,27 @@ const AdminDetails = ({ admin, isOpen, onClose }) => {
       open={isOpen}
       footer={
         <div className="d-flex justify-content-end">
-          {admin.is_verified ? (
-            <Button type="primary" danger={admin.is_active ? true : false}>
-              {admin.is_active ? (
-                <div className="d-flex align-items-center">
-                  <ExclamationCircleOutlined className="me-2" />
-                  <span>Deactivate Account</span>
-                </div>
-              ) : (
-                <div className="d-flex align-items-center">
-                  <CheckCircleOutlined className="me-2" />
-                  <span>Activate Account</span>
-                </div>
-              )}
-            </Button>
-          ) : (
-            <Button type="link" loading={isLoading} onClick={resendMail}>
-              Resend Email
-            </Button>
-          )}
+          {admin.role === "Super Admin" ? (
+            admin.is_verified ? (
+              <Button type="primary" danger={admin.is_active ? true : false}>
+                {admin.is_active ? (
+                  <div className="d-flex align-items-center">
+                    <ExclamationCircleOutlined className="me-2" />
+                    <span>Deactivate Account</span>
+                  </div>
+                ) : (
+                  <div className="d-flex align-items-center">
+                    <CheckCircleOutlined className="me-2" />
+                    <span>Activate Account</span>
+                  </div>
+                )}
+              </Button>
+            ) : (
+              <Button type="link" loading={isLoading} onClick={resendMail}>
+                Resend Email
+              </Button>
+            )
+          ) : null}
         </div>
       }
     >
@@ -79,7 +81,17 @@ const AdminDetails = ({ admin, isOpen, onClose }) => {
           <div>
             <Avatar
               size={120}
-              icon={<Image src={getProfileImg(admin.image)} />}
+              icon={
+                admin.image ? (
+                  <Image
+                    src={getProfileImg(admin.image)}
+                    alt="profile"
+                    preview={false}
+                  />
+                ) : (
+                  <UserOutlined />
+                )
+              }
             />
           </div>
           <div>

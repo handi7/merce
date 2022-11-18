@@ -12,6 +12,7 @@ export default function Side({ collapsed }) {
 
   return (
     <Sider
+      className="border"
       style={{
         overflow: "auto",
         height: "100vh",
@@ -20,13 +21,14 @@ export default function Side({ collapsed }) {
         left: 0,
         top: 60,
         bottom: 0,
+        backgroundColor: "#fff",
       }}
       trigger={null}
       collapsible
       collapsed={collapsed}
     >
       <Menu
-        theme="dark"
+        theme="light"
         mode="inline"
         defaultSelectedKeys={["/"]}
         items={menuData}

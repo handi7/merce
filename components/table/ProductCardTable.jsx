@@ -2,9 +2,9 @@ import { Button, Card, Image, List, Tag, Typography } from "antd";
 import React from "react";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
-import getProductImg from "../../helper/client/getProductImage";
 import { addToCart } from "../../store/actions/CartAction";
-import toCurrency from "../../helper/client/toCurrency";
+import { toCurrency } from "../../helper/client/number";
+import { getProductImg } from "../../helper/client/images";
 
 const { Text } = Typography;
 
@@ -32,6 +32,7 @@ export default function ProductCardTable({ products }) {
                 style={{ objectFit: "contain" }}
                 src={getProductImg(product.image)}
                 height={300}
+                alt='product'
               />
               <div className="d-flex flex-column justify-content-end h-100">
                 <span>{product.category}</span>

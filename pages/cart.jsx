@@ -1,13 +1,14 @@
 import { Button, Card, Col, Form, Modal, Row, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import toCurrency from "../helper/client/toCurrency";
 import SelectMarket from "../components/cart/SelectMarket";
 import CartTable from "../components/table/CartTable";
 import axios from "axios";
-import { API_URL } from "../lib/constants";
+import { LOCAL_TOKEN } from "../lib/constants";
 import { getCartItems } from "../store/actions/CartAction";
 import Router from "next/router";
+import { toCurrency } from "../helper/client/number";
+import Head from "next/head";
 
 const { Text } = Typography;
 
@@ -48,7 +49,7 @@ export default function Cart() {
   const handleOk = () => {
     setConfirmLoading(true);
     setTimeout(async () => {
-      await axios.post(`${API_URL}/cart/checkout`, {
+      await axios.post(`/api/cart/checkout`, {
         user_id: user.id,
         market,
         cart,
@@ -65,13 +66,18 @@ export default function Cart() {
   };
 
   useEffect(() => {
-    if (!user.id) {
+    const token = localStorage.getItem(LOCAL_TOKEN);
+    if (!token) {
       Router.push("/login");
     }
-  }, [user]);
+  }, []);
 
   return (
     <>
+      <Head>
+        <title>MERCE | Cart({cart.length})</title>
+      </Head>
+
       <Row>
         <Col span={16}>
           <Card>
@@ -119,6 +125,7 @@ export default function Cart() {
           </Card>
         </Col>
       </Row>
+
       <Modal
         title="Place Order"
         open={open}

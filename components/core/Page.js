@@ -10,7 +10,9 @@ const NonDashboardRoutes = [
   "/login",
   "/signup",
   "/verify/[token]",
-  "/forgot",
+  "/forgot-password",
+  "/reset-password/[token]",
+  "/invoice-print/[invoice_id]",
   "/lockscreen",
   "/_error",
 ];

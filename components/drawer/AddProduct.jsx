@@ -4,16 +4,15 @@ import {
   Divider,
   Drawer,
   Form,
+  Image,
   Input,
   InputNumber,
   Row,
   Select,
 } from "antd";
 import axios from "axios";
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import getProductImg from "../../helper/client/getProductImage";
-import { API_URL } from "../../lib/constants";
+import React, { useState } from "react";
+import { getProductImg } from "../../helper/client/images";
 
 export default function AddProduct(props) {
   const { open, onClose, categories, units } = props;
@@ -41,7 +40,7 @@ export default function AddProduct(props) {
         }
       }
 
-      await axios.post(`${API_URL}/products/addProduct`, formData);
+      await axios.post(`/api/products/addProduct`, formData);
     } catch (error) {
       console.log(error);
     }
@@ -78,7 +77,7 @@ export default function AddProduct(props) {
     >
       <div className="text-center">
         <label htmlFor="inputImg">
-          <img
+          <Image
             style={{ cursor: "pointer" }}
             className="border rounded p-3 w-75"
             src={image.preview ? image.preview : getProductImg("")}
@@ -205,9 +204,9 @@ export default function AddProduct(props) {
                   )}
                 >
                   {units.map((item) => (
-                    <Option key={item.id} value={item.unit}>
+                    <Select.Option key={item.id} value={item.unit}>
                       {item.unit}
-                    </Option>
+                    </Select.Option>
                   ))}
                 </Select>
               </Form.Item>
@@ -297,9 +296,9 @@ export default function AddProduct(props) {
                   )}
                 >
                   {categories.map((item) => (
-                    <Option key={item.id} value={item.id}>
+                    <Select.Option key={item.id} value={item.id}>
                       {item.category}
-                    </Option>
+                    </Select.Option>
                   ))}
                 </Select>
               </Form.Item>

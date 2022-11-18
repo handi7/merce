@@ -16,15 +16,14 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import React, { useState } from "react";
-import getProductImg from "../../helper/client/getProductImage";
-import toCurrency from "../../helper/client/toCurrency";
 import { addToCart } from "../../store/actions/CartAction";
 import { useDispatch, useSelector } from "react-redux";
 import EllipsisDropdown from "../EllipsisDropdown";
 import EditProduct from "../drawer/EditProduct";
 import AddStock from "../drawer/AddStock";
 import axios from "axios";
-import { API_URL } from "../../lib/constants";
+import { getProductImg } from "../../helper/client/images";
+import { toCurrency } from "../../helper/client/number";
 
 const { Text } = Typography;
 
@@ -64,7 +63,7 @@ export default function ProductList({ products, getProducts }) {
 
   const onDelete = async () => {
     try {
-      await axios.patch(`${API_URL}/products/delete`, {
+      await axios.patch(`/api/products/delete`, {
         id: selectedProduct.id,
       });
       setmodal({ ...modal, delete: false });
@@ -126,7 +125,7 @@ export default function ProductList({ products, getProducts }) {
           <div
             style={{ cursor: "pointer" }}
             className="d-flex"
-            onClick={() => showModal(product)}
+            onClick={() => showModal("detail", product)}
           >
             <div style={{ width: "80px" }}>
               <Image
@@ -196,6 +195,7 @@ export default function ProductList({ products, getProducts }) {
   return (
     <>
       <Table
+        rowKey={(item) => item.id}
         columns={columns}
         dataSource={products}
         pagination={{ pageSize: 10 }}
@@ -230,6 +230,7 @@ export default function ProductList({ products, getProducts }) {
               src={getProductImg(selectedProduct.image)}
               height={150}
               preview={false}
+              alt="product"
             />
           </div>
           <Text strong>Delete {selectedProduct.name}?</Text>
@@ -247,7 +248,11 @@ export default function ProductList({ products, getProducts }) {
       >
         <Row>
           <Col span={11}>
-            <Image src={getProductImg(selectedProduct.image)} preview={false} />
+            <Image
+              src={getProductImg(selectedProduct.image)}
+              preview={false}
+              alt="product"
+            />
           </Col>
           <Col span={12} offset={1}>
             <Row>

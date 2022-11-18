@@ -5,10 +5,10 @@ import "antd/dist/antd.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useEffect } from "react";
 import { LOCAL_TOKEN } from "../lib/constants";
-import { keepLogin, logout } from "../store/functions/authFunction";
 import { Spin } from "antd";
 import Page from "../components/core/Page";
 import { getCartItems } from "../store/actions/CartAction";
+import { checkStorage, keepLogin } from "../store/actions/authAction";
 
 function MyApp({ Component, pageProps }) {
   const user = useSelector((state) => state.user);
@@ -25,7 +25,7 @@ function MyApp({ Component, pageProps }) {
     if (token) {
       keepLogin(dispatch, token);
     } else {
-      logout(dispatch);
+      checkStorage(dispatch);
     }
   }, []);
 

@@ -1,10 +1,9 @@
 import { message } from "antd";
 import axios from "axios";
-import { API_URL } from "../../lib/constants";
 
 export const getCartItems = async (user_id, dispatch) => {
   try {
-    const response = await axios.get(`${API_URL}/cart/getItems/${user_id}`);
+    const response = await axios.get(`/api/cart/getItems/${user_id}`);
     dispatch({ type: "FILL_CART", payload: response.data });
   } catch (error) {
     console.log(error);
@@ -13,7 +12,7 @@ export const getCartItems = async (user_id, dispatch) => {
 
 export const addToCart = async (user_id, product_id, qty, dispatch) => {
   try {
-    const response = await axios.post(`${API_URL}/cart/addItem`, {
+    const response = await axios.post(`/api/cart/addItem`, {
       user_id,
       product_id,
       qty,
@@ -30,7 +29,7 @@ export const addToCart = async (user_id, product_id, qty, dispatch) => {
 
 export const updateCart = async (user_id, id, qty, dispatch) => {
   try {
-    await axios.patch(`${API_URL}/cart/updateItem`, { id, qty });
+    await axios.patch(`/api/cart/updateItem`, { id, qty });
     getCartItems(user_id, dispatch);
   } catch (error) {
     console.log(error);
@@ -39,7 +38,7 @@ export const updateCart = async (user_id, id, qty, dispatch) => {
 
 export const deleteCart = async (user_id, cart_id, dispatch) => {
   try {
-    await axios.delete(`${API_URL}/cart/deleteItem/${cart_id}`);
+    await axios.delete(`/api/cart/deleteItem/${cart_id}`);
     getCartItems(user_id, dispatch);
   } catch (error) {
     console.log(error);

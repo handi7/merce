@@ -1,22 +1,31 @@
 import { Button, Drawer, Form, Input, message } from "antd";
 import axios from "axios";
 import { useState } from "react";
-import { API_URL } from "../../lib/constants";
 
-export default function AddAdmin({ isOpen, onClose }) {
+export default function AddAdmin({ isOpen, onClose, getAdmins }) {
   const [isLoading, setLoading] = useState(false);
 
   const onFinish = async (values) => {
-    setLoading(true);
-    const response = await axios.post(`${API_URL}/admins/addAdmin`, values);
+    try {
+      setLoading(true);
+      if (!values.last_name) {
+        values.last_name = "";
+      }
 
-    setLoading(false);
-    if (!response.data) {
-      return message.error("Server error!");
+      await axios.post(`/api/admins/addAdmin`, values);
+
+      setLoading(false);
+      message.success(
+        `${values.first_name} successfully added as admin and verification mail sent to ${values.email}`
+      );
+      getAdmins();
+    } catch (error) {
+      if (error.response.status === 400) {
+        message.error(error.response.data);
+      }
+      console.log(error);
+      setLoading(false);
     }
-    message.success(
-      `${values.first_name} successfully added as admin and verification mail sent to ${values.email}`
-    );
   };
 
   return (
@@ -25,27 +34,6 @@ export default function AddAdmin({ isOpen, onClose }) {
       placement="right"
       onClose={() => onClose("add")}
       open={isOpen}
-      // footer={
-      //   <div className="d-flex justify-content-end">
-      //     {admin.is_verified ? (
-      //       <Button type="primary" danger={admin.is_active ? true : false}>
-      //         {admin.is_active ? (
-      //           <div className="d-flex align-items-center">
-      //             <ExclamationCircleOutlined className="me-2" />
-      //             <span>Deactivate Account</span>
-      //           </div>
-      //         ) : (
-      //           <div className="d-flex align-items-center">
-      //             <CheckCircleOutlined className="me-2" />
-      //             <span>Activate Account</span>
-      //           </div>
-      //         )}
-      //       </Button>
-      //     ) : (
-      //       <Button type="link">Resend Email</Button>
-      //     )}
-      //   </div>
-      // }
     >
       <Form layout="vertical" onFinish={onFinish}>
         <Form.Item

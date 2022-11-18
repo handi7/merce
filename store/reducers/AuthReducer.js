@@ -46,6 +46,9 @@ const authReducer = (state = init_state, action) => {
     case "FILL_PROFILE":
       return { ...state, ...action.payload };
 
+    case "CHECK_STORAGE":
+      return { ...state, storageIsChecked: true };
+
     //   case "LOADING":
     //     return { ...state, loading: action.payload };
 

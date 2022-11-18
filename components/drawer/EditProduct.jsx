@@ -4,6 +4,7 @@ import {
   Col,
   Drawer,
   Form,
+  Image,
   Input,
   InputNumber,
   Row,
@@ -11,10 +12,9 @@ import {
 } from "antd";
 import { CloseCircleOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
-import getProductImg from "../../helper/client/getProductImage";
 import axios from "axios";
-import { API_URL } from "../../lib/constants";
 import { useEffect } from "react";
+import { getProductImg } from "../../helper/client/images";
 
 export default function EditProduct({
   product,
@@ -42,7 +42,7 @@ export default function EditProduct({
     console.log(values);
     if (Object.keys(values).length || image.file) {
       formData.append("id", product.id);
-      await axios.patch(`${API_URL}/products/updateProduct`, formData);
+      await axios.patch(`/api/products/updateProduct`, formData);
       setImage({ file: null, preview: null });
       getProducts("");
       onCancel();
@@ -106,7 +106,7 @@ export default function EditProduct({
           }
         >
           <label htmlFor="inputImg">
-            <img
+            <Image
               style={{ cursor: "pointer" }}
               className="border rounded p-3 w-75"
               src={image.preview ? image.preview : getProductImg(product.image)}

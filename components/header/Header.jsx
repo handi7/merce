@@ -8,7 +8,7 @@ import {
   message,
   Space,
 } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -18,20 +18,19 @@ import {
   MessageOutlined,
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
-import Router from "next/router";
-import { logout } from "../../store/functions/authFunction";
-import UserMenu from "./UserDropdown";
+import { logout } from "../../store/actions/authAction";
 import CartDropdown from "./CartDropdown";
-import { getCartItems } from "../../store/actions/CartAction";
 import Profile from "../drawer/ProfileDrawer";
-import getProfileImg from "../../helper/client/getProfileImage";
+import { getProfileImg } from "../../helper/client/images";
+import Router from "next/router";
 
 const { Header } = Layout;
 
 const menu = (dispatch) => {
   const onMenuClick = ({ key }) => {
     if (key === "logout") {
-      return logout(dispatch);
+      logout(dispatch);
+      return Router.push("/login");
     }
 
     // Router.push(key);
@@ -71,7 +70,6 @@ const menu = (dispatch) => {
 export default function Head({ collapsed, setCollapsed }) {
   const user = useSelector((state) => state.user);
   const cart = useSelector((state) => state.cart);
-  const dispatch = useDispatch();
 
   const [isOpen, setOpen] = useState(false);
 
@@ -84,10 +82,8 @@ export default function Head({ collapsed, setCollapsed }) {
           backgroundColor: "#307DF0",
           position: "fixed",
           width: "100%",
-          // marginRight: "200px",
           left: 0,
         }}
-        // backgroundColor="blue"
       >
         <div className="d-flex align-items-center">
           {React.createElement(
@@ -98,7 +94,13 @@ export default function Head({ collapsed, setCollapsed }) {
             }
           )}
 
-          <h4 className="text-white mt-1 mx-3">LOGO</h4>
+          <h4
+            style={{ cursor: "pointer" }}
+            className="text-white mt-1 p-3"
+            onClick={() => Router.push("/")}
+          >
+            MERCE
+          </h4>
         </div>
         <Space size="large">
           <Dropdown
@@ -113,7 +115,7 @@ export default function Head({ collapsed, setCollapsed }) {
             </Badge>
           </Dropdown>
 
-          <Dropdown
+          {/* <Dropdown
             placement="bottomRight"
             overlay={() => menu(dispatch)}
             trigger={["click"]}
@@ -123,7 +125,7 @@ export default function Head({ collapsed, setCollapsed }) {
                 style={{ fontSize: "20px", color: "white", cursor: "pointer" }}
               />
             </Badge>
-          </Dropdown>
+          </Dropdown> */}
 
           {/* <Dropdown
           className="me-3"
@@ -147,7 +149,11 @@ export default function Head({ collapsed, setCollapsed }) {
             <Avatar
               icon={
                 user.image ? (
-                  <Image preview={false} src={getProfileImg(user.image)} />
+                  <Image
+                    preview={false}
+                    src={getProfileImg(user.image)}
+                    alt="profile"
+                  />
                 ) : (
                   <UserOutlined />
                 )

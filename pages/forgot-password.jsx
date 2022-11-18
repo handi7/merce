@@ -9,22 +9,33 @@ import {
   Typography,
   Image,
 } from "antd";
+import axios from "axios";
 import Head from "next/head";
 import Router from "next/router";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
 import { Card } from "reactstrap";
 import { LOCAL_TOKEN, PUBLIC_URL } from "../lib/constants";
-import { login } from "../store/actions/authAction";
 
-const { Link, Title } = Typography;
+const { Title } = Typography;
 
-export default function Login() {
-  const user = useSelector((state) => state.user);
-  const dispatch = useDispatch();
+export default function Forgot() {
+  const [msg, setMsg] = useState({ err: "", success: "" });
+  const [loading, setLoading] = useState(false);
 
   const onFinish = async (values) => {
-    login(dispatch, values);
+    try {
+      setMsg({ err: "", success: "" });
+      setLoading(true);
+      const response = await axios.post("/api/admins/sendReset", values);
+      setMsg({ ...msg, success: response.data });
+      setLoading(false);
+    } catch (error) {
+      if (error.response.status === 404) {
+        setMsg({ ...msg, err: error.response.data });
+        setLoading(false);
+      }
+    }
   };
 
   useEffect(() => {
@@ -37,10 +48,10 @@ export default function Login() {
   return (
     <>
       <Head>
-        <title>MERCE | Login</title>
+        <title>MERCE | Forgot Password</title>
       </Head>
 
-      <Spin tip="Loading..." spinning={user.loading}>
+      <Spin tip="Loading..." spinning={loading}>
         <div className="container mt-5">
           <Row>
             <Col span={8} offset={8}>
@@ -55,11 +66,23 @@ export default function Login() {
 
                   <Title level={2}>MERCE</Title>
 
-                  <h4>Login</h4>
+                  <h4>Forgot Password</h4>
                 </div>
 
-                {user.errMsg ? (
-                  <Alert message={user.errMsg} type="error" showIcon />
+                {msg.err ? (
+                  <Alert
+                    className="text-center"
+                    message={msg.err}
+                    type="error"
+                  />
+                ) : null}
+
+                {msg.success ? (
+                  <Alert
+                    className="text-center"
+                    message={msg.success}
+                    type="success"
+                  />
                 ) : null}
 
                 <Form layout="vertical" onFinish={onFinish}>
@@ -70,36 +93,19 @@ export default function Login() {
                       { required: true, message: "Please input your email!" },
                     ]}
                   >
-                    <Input placeholder="Email" />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Password"
-                    name="password"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your password!",
-                      },
-                    ]}
-                  >
-                    <Input.Password placeholder="Password" />
+                    <Input placeholder="type your email" />
                   </Form.Item>
 
                   <Form.Item>
                     <Button
-                      disabled={user.loading}
+                      disabled={loading}
                       type="primary"
                       block
                       htmlType="submit"
                     >
-                      Login
+                      Send Link
                     </Button>
                   </Form.Item>
-
-                  <div className="text-center mb-3">
-                    <Link href="/forgot-password">forgot password?</Link>
-                  </div>
                 </Form>
               </Card>
             </Col>

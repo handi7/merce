@@ -1,9 +1,12 @@
-import { Alert, Button, Col, Row, Spin } from "antd";
+import { Alert, Button, Col, Image, Row, Spin, Typography } from "antd";
 import axios from "axios";
+import Head from "next/head";
 import Router, { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { Card } from "reactstrap";
-import { API_URL } from "../../lib/constants";
+import { PUBLIC_URL } from "../../lib/constants";
+
+const { Title } = Typography;
 
 export default function Verify() {
   const { token } = useRouter().query;
@@ -12,7 +15,7 @@ export default function Verify() {
 
   const checkLink = async (token) => {
     try {
-      const response = await axios.post(`${API_URL}/admins/verify`, { token });
+      const response = await axios.post(`/api/admins/verify`, { token });
 
       setLoading(false);
       if (typeof response.data === "string") {
@@ -38,26 +41,44 @@ export default function Verify() {
   }, [token]);
 
   return (
-    <Spin tip="Loading..." spinning={isLoading}>
-      <div className="container text-center mt-5">
-        <Row>
-          <Col span={8} offset={8}>
-            <Card className="mt-5 p-5">
-              <h4>Verification Page</h4>
-              {errMsg ? (
-                <Alert message={errMsg} type="error" />
-              ) : (
-                <>
-                  <Alert message="Your account is verified!" type="success" />
-                  <Button type="link" onClick={onLogin}>
-                    Login
-                  </Button>
-                </>
-              )}
-            </Card>
-          </Col>
-        </Row>
-      </div>
-    </Spin>
+    <>
+      <Head>
+        <title>MERCE | Verification</title>
+      </Head>
+
+      <Spin tip="Loading..." spinning={isLoading}>
+        <div className="container text-center mt-5">
+          <Row>
+            <Col span={8} offset={8}>
+              <Card className="shadow mt-5 p-5">
+                <div className="text-center">
+                  <Image
+                    src={`${PUBLIC_URL}/logo.png`}
+                    height={50}
+                    alt="logo"
+                    preview={false}
+                  />
+
+                  <Title level={2}>MERCE</Title>
+
+                  <h4>Verification Page</h4>
+                </div>
+
+                {errMsg ? (
+                  <Alert message={errMsg} type="error" />
+                ) : (
+                  <>
+                    <Alert message="Your account is verified!" type="success" />
+                    <Button type="link" onClick={onLogin}>
+                      Login
+                    </Button>
+                  </>
+                )}
+              </Card>
+            </Col>
+          </Row>
+        </div>
+      </Spin>
+    </>
   );
 }

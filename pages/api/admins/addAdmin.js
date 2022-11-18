@@ -10,14 +10,15 @@ import db from "../../../lib/db";
 export default async function addAdmin(req, res) {
   try {
     const { first_name, last_name, email } = req.body;
-    let checkQuery = `select * from admins where email = ?;`;
+    let checkQuery = `select email from admins where email = ?;`;
     let insertQuery = `insert into admins (username, email, first_name, last_name, password) 
                     values (?, ?, ?, ?, ?);`;
 
-    const [resEmail] = await db.execute(checkQuery, [email]);
+    const [[resEmail]] = await db.execute(checkQuery, [email]);
 
-    if (resEmail.length)
-      return res.status(200).send("Email already registered!");
+    if (resEmail.email) {
+      return res.status(400).send("Email already registered!");
+    }
 
     const generated = generate(6);
     const password = encrypt(generated);

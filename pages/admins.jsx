@@ -16,12 +16,13 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import AddAdmin from "../components/drawer/addAdmin";
 import AdminDetails from "../components/drawer/AdminDetails";
-import getProfileImg from "../helper/client/getProfileImage";
-import { API_URL } from "../lib/constants";
+import { LOCAL_TOKEN } from "../lib/constants";
+import { getProfileImg } from "../helper/client/images";
+import Head from "next/head";
 
 const { Text } = Typography;
 
-export default function admins() {
+export default function Admins() {
   const user = useSelector((state) => state.user);
 
   const [admins, setAdmins] = useState([]);
@@ -30,7 +31,7 @@ export default function admins() {
 
   const getAdmins = async () => {
     try {
-      const response = await axios.get(`${API_URL}/admins/getAdmins`);
+      const response = await axios.get(`/api/admins/getAdmins`);
       setAdmins(response.data);
     } catch (error) {
       console.log(error);
@@ -54,10 +55,11 @@ export default function admins() {
   }, []);
 
   useEffect(() => {
-    if (!user.id) {
+    const token = localStorage.getItem(LOCAL_TOKEN);
+    if (!token) {
       Router.push("/login");
     }
-  }, [user]);
+  }, []);
 
   const columns = [
     {
@@ -71,7 +73,11 @@ export default function admins() {
               <Avatar
                 icon={
                   admin.image ? (
-                    <Image src={getProfileImg(admin.image)} />
+                    <Image
+                      src={getProfileImg(admin.image)}
+                      alt="profile"
+                      preview={false}
+                    />
                   ) : (
                     <UserOutlined />
                   )
@@ -141,22 +147,28 @@ export default function admins() {
 
   return (
     <>
+      <Head>
+        <title>MERCE | Admins</title>
+      </Head>
+
       <Card>
         <div className="d-flex justify-content-between mb-3">
           <h4>Admins</h4>
+
           {user.role === "Admin" ? null : (
             <Button type="primary" onClick={() => onOpen("add", "")}>
               Add New Admin
             </Button>
           )}
         </div>
+
         <Table
           rowKey={(item) => item.id}
           columns={columns}
           dataSource={admins}
-          rowClassName={() => "cursor-pointer"}
           onRow={(admin) => {
             return {
+              style: { cursor: "pointer" },
               onClick: () => onOpen("details", admin),
             };
           }}
@@ -169,7 +181,7 @@ export default function admins() {
         onClose={onClose}
       />
 
-      <AddAdmin isOpen={isOpen.add} onClose={onClose} />
+      <AddAdmin isOpen={isOpen.add} onClose={onClose} getAdmins={getAdmins} />
     </>
   );
 }

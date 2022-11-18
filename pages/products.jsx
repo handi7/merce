@@ -1,16 +1,14 @@
-import { Button, Card, Col, Row, Space, Table, Input, Tabs } from "antd";
+import { Button, Card, Space, Input, Tabs } from "antd";
 import { BorderOutlined, UnorderedListOutlined } from "@ant-design/icons";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import getProductImg from "../helper/client/getProductImage.js";
-import toCurrency from "../helper/client/toCurrency.js";
-import { API_URL } from "../lib/constants";
-import productImg from "../public/product.jpg";
+import { LOCAL_TOKEN } from "../lib/constants";
 import ProductCardTable from "../components/table/ProductCardTable.jsx";
 import ProductList from "../components/table/ProductList.jsx";
 import { useSelector } from "react-redux";
 import Router from "next/router.js";
 import AddProduct from "../components/drawer/AddProduct.jsx";
+import Head from "next/head";
 
 const { Search } = Input;
 
@@ -25,7 +23,7 @@ export default function Products() {
 
   const getProducts = async (search) => {
     try {
-      const response = await axios.get(`${API_URL}/products/${search}`);
+      const response = await axios.get(`/api/products/${search}`);
       setProducts(response.data.products);
 
       if (response.data.categories) {
@@ -52,18 +50,22 @@ export default function Products() {
   }, [searchText]);
 
   useEffect(() => {
-    if (!user.id) {
+    const token = localStorage.getItem(LOCAL_TOKEN);
+    if (!token) {
       Router.push("/login");
     }
-  }, [user]);
+  }, []);
 
   return (
     <>
-      {/* <Row>
-        <Col span={16}> */}
+      <Head>
+        <title>MERCE | Products</title>
+      </Head>
+
       <Card className="rounded">
         <div className="d-flex justify-content-between align-items-end">
           <h4>Products</h4>
+
           <Space>
             <Search
               placeholder="search product"
@@ -100,15 +102,10 @@ export default function Products() {
           })}
         />
       </Card>
-      {/* </Col> */}
-      {/* <Col span={7} offset={1}>
-          <Card className="rounded"></Card>
-        </Col> */}
-      {/* </Row> */}
+
       <AddProduct
         open={drawerIsOpen}
         onClose={setDrawerOpen}
-        img={productImg}
         categories={categories}
         units={units}
       />

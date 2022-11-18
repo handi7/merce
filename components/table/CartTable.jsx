@@ -12,8 +12,8 @@ import { DeleteOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { deleteCart, updateCart } from "../../store/actions/CartAction";
-import getProductImg from "../../helper/client/getProductImage";
-import toCurrency from "../../helper/client/toCurrency";
+import { getProductImg } from "../../helper/client/images";
+import { toCurrency } from "../../helper/client/number";
 
 const CartTable = () => {
   const user = useSelector((state) => state.user);
@@ -145,10 +145,11 @@ const CartTable = () => {
   return (
     <>
       <Table
+        rowKey={(item) => item.id}
         className="mt-2"
         columns={columns}
         dataSource={cart}
-        pagination={{ pageSize: 10 }}
+        pagination={cart.length > 10 ? { pageSize: 10 } : false}
       />
 
       <Modal

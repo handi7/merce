@@ -8,10 +8,10 @@ import moment from "moment";
 import axios from "axios";
 import Router from "next/router";
 import React, { useEffect, useState } from "react";
-import toCurrency from "../helper/client/toCurrency";
-import { API_URL, PUBLIC_URL } from "../lib/constants";
+import { LOCAL_TOKEN } from "../lib/constants";
 import EllipsisDropdown from "../components/EllipsisDropdown";
-import { useSelector } from "react-redux";
+import { toCurrency } from "../helper/client/number";
+import Head from "next/head";
 
 const { Text } = Typography;
 const { Search } = Input;
@@ -36,15 +36,13 @@ const getTag = (status) => {
 };
 
 export default function Orders() {
-  const user = useSelector((state) => state.user);
-
   const [totalOrders, setTotalOrders] = useState(0);
   const [orders, setOrders] = useState([]);
   const [searchText, setSearchText] = useState("");
 
   const getOrders = async (text) => {
     try {
-      const response = await axios.get(`${API_URL}/orders/getOrders/${text}`);
+      const response = await axios.get(`/api/orders/getOrders/${text}`);
       setTotalOrders(response.data.count);
       setOrders(response.data.orders);
     } catch (error) {
@@ -54,7 +52,7 @@ export default function Orders() {
 
   const updateStatus = async (status, invId) => {
     try {
-      await axios.patch(`${API_URL}/orders/updateStatus`, { status, invId });
+      await axios.patch(`/api/orders/updateStatus`, { status, invId });
       getOrders("");
     } catch (error) {
       console.log(error);
@@ -76,10 +74,11 @@ export default function Orders() {
   }, []);
 
   useEffect(() => {
-    if (!user.id) {
+    const token = localStorage.getItem(LOCAL_TOKEN);
+    if (!token) {
       Router.push("/login");
     }
-  }, [user]);
+  }, []);
 
   const getMenuItem = (item) => {
     let stt = "";
@@ -143,7 +142,10 @@ export default function Orders() {
 
   const dropdownMenu = (item) => (
     <Menu>
-      <Menu.Item key={1}>
+      <Menu.Item
+        key={1}
+        onClick={() => Router.push(`/invoice/${item.invoice_id}`)}
+      >
         <div className="d-flex align-items-center">
           <EyeOutlined />
           <span className="ms-2">View Details</span>
@@ -162,9 +164,7 @@ export default function Orders() {
           <Text
             strong
             style={{ cursor: "pointer" }}
-            onClick={() =>
-              Router.push(`${PUBLIC_URL}/invoice/${item.invoice_id}`)
-            }
+            onClick={() => Router.push(`/invoice/${item.invoice_id}`)}
           >
             {item.invoice_id}
           </Text>
@@ -222,7 +222,7 @@ export default function Orders() {
       dataIndex: "market",
       key: "market",
       render: (_, item) => (
-        <Tag color={item.color}>
+        <Tag>
           <Text strong>{item.market}</Text>
         </Tag>
       ),
@@ -263,22 +263,34 @@ export default function Orders() {
   ];
 
   return (
-    <Card>
-      <div className="d-flex justify-content-between mb-3">
-        <div>
-          <h4>Orders</h4>
-          <span>{`You have total ${totalOrders} orders.`}</span>
+    <>
+      <Head>
+        <title>MERCE | Orders</title>
+      </Head>
+
+      <Card>
+        <div className="d-flex justify-content-between mb-3">
+          <div>
+            <h4>Orders</h4>
+            <span>{`You have total ${totalOrders} orders.`}</span>
+          </div>
+
+          <Search
+            style={{ width: "200px" }}
+            placeholder="input search text"
+            onSearch={onSearch}
+            onChange={onSearchChange}
+            allowClear
+            enterButton={<SearchOutlined style={{ fontSize: "18px" }} />}
+          />
         </div>
-        <Search
-          style={{ width: "200px" }}
-          placeholder="input search text"
-          onSearch={onSearch}
-          onChange={onSearchChange}
-          allowClear
-          enterButton={<SearchOutlined style={{ fontSize: "18px" }} />}
+
+        <Table
+          rowKey={(item) => item.id}
+          columns={columns}
+          dataSource={orders}
         />
-      </div>
-      <Table rowKey={(item) => item.id} columns={columns} dataSource={orders} />
-    </Card>
+      </Card>
+    </>
   );
 }

@@ -14,8 +14,7 @@ import axios from "axios";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import getProductImg from "../../helper/client/getProductImage";
-import { API_URL } from "../../lib/constants";
+import { getProductImg } from "../../helper/client/images";
 
 const { Text } = Typography;
 
@@ -30,7 +29,7 @@ export default function AddStock({ product, isEdit, onCancel, getProducts }) {
     const { add_stock } = form.getFieldsValue();
     const stock_pkg = Math.floor((add_stock + product.stock) / product.per_pkg);
 
-    await axios.patch(`${API_URL}/products/addStock`, {
+    await axios.patch(`/api/products/addStock`, {
       add_stock,
       stock_pkg,
       id: product.id,
@@ -67,6 +66,7 @@ export default function AddStock({ product, isEdit, onCancel, getProducts }) {
             height={200}
             src={getProductImg(product.image)}
             preview={false}
+            alt="product"
           />
         </Col>
 
